@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  back:
+    image: drupal:latest # Latest version of drupal
+    ports:
+      - 8080:80 # Expose 8080 on host and sent to 80 in container
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+
+  db:
+    image: postgres:latest # Latest version of postgres
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    restart: always
