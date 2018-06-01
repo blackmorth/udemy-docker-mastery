@@ -1,9 +1,8 @@
-version: '2'
+version: '3.1'
 
 services:
-  back:
-    build: .
-    image: custom-drupal # Latest version of drupal
+  drupal:
+    image: drupal:latest # Latest version of drupal
     ports:
       - 8080:80 # Expose 8080 on host and sent to 80 in container
     volumes:
@@ -11,15 +10,15 @@ services:
       - drupal-profiles:/var/www/html/profiles
       - drupal-themes:/var/www/html/themes
       - drupal-sites:/var/www/html/sites
-    restart: always
 
-  db:
+  postgres:
     image: postgres:latest # Latest version of postgres
     environment:
-      - POSTGRES_PASSWORD=mysecretpassword
-    restart: always
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_secret
     volumes:
       - drupal-data:/var/lib/postgresql/data
+    secrets:
+      - db_secret
 
 volumes:
   drupal-modules:
@@ -27,3 +26,7 @@ volumes:
   drupal-themes:
   drupal-sites:
   drupal-data:
+
+secrets:
+  db_secret:
+    external: true
